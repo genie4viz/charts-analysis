@@ -23,22 +23,8 @@ module.exports = {
         // Resolve node module use of fs
         fs: 'empty'
     },    
-    module: {        
+    module: {
         rules: [{
-            test: /\.js$/,
-            exclude: /node_modules/,
-            use: [
-                'babel-loader',
-                {
-                    loader: 'babel-loader'
-                }
-            ]
-        },{
-            test: /\.css$/,
-            use: [ 'style-loader', {
-                loader: 'css-loader'                
-            }]
-        }, {
             test: /\.(png|gif|jpg|jpeg|svg|xml|gltf|glb)$/,
             use: [ 'url-loader' ]
         },{
@@ -49,7 +35,35 @@ module.exports = {
                 loader: 'file-loader',
                 options: {name: '[name].[ext]'}
             }],
-        }        
+        },
+        {
+            test: /\.(scss)$/,
+            use: [
+              {
+                // Adds CSS to the DOM by injecting a `<style>` tag
+                loader: 'style-loader'
+              },
+              {
+                // Interprets `@import` and `url()` like `import/require()` and will resolve them
+                loader: 'css-loader'
+              },
+              {
+                // Loader for webpack to process CSS with PostCSS
+                loader: 'postcss-loader',
+                options: {
+                  plugins: function () {
+                    return [
+                      require('autoprefixer')
+                    ];
+                  }
+                }
+              },
+              {
+                // Loads a SASS/SCSS file and compiles it to CSS
+                loader: 'sass-loader'
+              }
+            ]
+          }
         ]},
     plugins: [        
         new HtmlWebpackPlugin({
@@ -57,7 +71,8 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: 'src/index.html'
-        }),        
+        }),
+        // Copy Cesium Assets, Widgets, and Workers to a static directory        
         new CopywebpackPlugin([ { from: 'src/static', to: 'static' } ]),
     ],
     devServer: {

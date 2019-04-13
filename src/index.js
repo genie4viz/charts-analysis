@@ -1,3 +1,2 @@
-require('./css/main.css');
-
-console.log("greatedd!");
+import 'bootstrap';
+import './scss/app.scss';
