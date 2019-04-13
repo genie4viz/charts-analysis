@@ -23,8 +23,17 @@ module.exports = {
         // Resolve node module use of fs
         fs: 'empty'
     },    
-    module: {
+    module: {        
         rules: [{
+            test: /\.js$/,
+            exclude: /node_modules/,
+            use: [
+                'babel-loader',
+                {
+                    loader: 'babel-loader'
+                }
+            ]
+        },{
             test: /\.css$/,
             use: [ 'style-loader', {
                 loader: 'css-loader'                
